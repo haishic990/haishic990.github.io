@@ -169,6 +169,23 @@
                         <input type="text" id="publish-title" placeholder="请输入商品标题">
                     </div>
                     <div class="form-group">
+                        <label>商品图片</label>
+                        <div class="image-upload-section">
+                            <input type="file" id="publish-image" accept="image/*" style="display: none;"
+                                onchange="handleImageUpload(event)">
+                            <div class="image-upload-area" onclick="document.getElementById('publish-image').click()">
+                                <div id="image-preview" style="display: none;">
+                                    <img id="preview-img" src="" alt="商品图片">
+                                    <button class="remove-image-btn" onclick="removeImage()">×</button>
+                                </div>
+                                <div id="upload-hint" class="upload-hint">
+                                    <span class="upload-icon">📷</span>
+                                    <span>点击上传图片</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label>商品价格</label>
                         <input type="number" id="publish-price" placeholder="请输入商品价格">
                     </div>

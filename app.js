@@ -411,7 +411,9 @@ function loadProducts() {
         const productItem = document.createElement('div');
         productItem.className = 'product-item';
         productItem.onclick = () => goToDetail(product.id);
+        const hasImage = product.images && product.images.length > 0;
         productItem.innerHTML = `
+            ${hasImage ? `<img src="${product.images[0]}" class="product-image" alt="${product.title}" />` : '<div class="product-image-placeholder">📷</div>'}
             <h3>${product.title}</h3>
             <div class="price">¥${product.price}</div>
             <div class="info">分类：${product.category}</div>
@@ -447,6 +449,30 @@ function loadProductDetail(productId) {
     }
 }
 
+let uploadedImageBase64 = null;
+
+function handleImageUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        uploadedImageBase64 = e.target.result;
+        document.getElementById('preview-img').src = uploadedImageBase64;
+        document.getElementById('image-preview').style.display = 'block';
+        document.getElementById('upload-hint').style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+}
+
+function removeImage() {
+    uploadedImageBase64 = null;
+    document.getElementById('preview-img').src = '';
+    document.getElementById('image-preview').style.display = 'none';
+    document.getElementById('upload-hint').style.display = 'flex';
+    document.getElementById('publish-image').value = '';
+}
+
 function submitPublish() {
     const title = document.getElementById('publish-title').value;
     const price = document.getElementById('publish-price').value;
@@ -469,7 +495,7 @@ function submitPublish() {
         seller: globalData.userInfo.username,
         phone,
         createTime: new Date().toISOString().split('T')[0],
-        images: [],
+        images: uploadedImageBase64 ? [uploadedImageBase64] : [],
         status: 'pending',
         rejectReason: ''
     };
