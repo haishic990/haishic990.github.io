@@ -229,6 +229,7 @@ async function handleLogin() {
                 pages.switch('index');
                 updateWelcomeText();
                 loadProducts();
+                loadActivities();
             } else {
                 alert('管理员邮箱或密码错误');
             }
@@ -261,6 +262,7 @@ async function handleLogin() {
             pages.switch('index');
             updateWelcomeText();
             loadProducts();
+            loadActivities();
         } else {
             alert(result.message);
         }
