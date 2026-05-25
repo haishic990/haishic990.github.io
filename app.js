@@ -189,7 +189,7 @@ function validatePassword(password) {
 }
 
 // 登录相关功能
-const API_URL = 'http://localhost:8080/campus_community_backend_war_exploded/api';
+const API_URL = 'http://f262a7ea.natappfree.cc/campus_community_backend_war_exploded/api';
 
 async function handleLogin() {
     const email = document.getElementById('username').value;
