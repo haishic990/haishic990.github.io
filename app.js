@@ -1032,6 +1032,14 @@ async function loadStatistics() {
 // 活动相关功能
 function loadActivities() {
     const activityList = document.getElementById('activity-list');
+    const addActivityBtn = document.getElementById('add-activity-btn');
+
+    // 控制添加活动按钮只对管理员显示
+    if (globalData.userInfo && globalData.userInfo.type === 'admin') {
+        addActivityBtn.style.display = 'inline-block';
+    } else {
+        addActivityBtn.style.display = 'none';
+    }
 
     activityList.innerHTML = '';
 
