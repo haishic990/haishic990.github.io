@@ -1053,27 +1053,65 @@ function loadActivities() {
     globalData.activities.forEach(activity => {
         const activityItem = document.createElement('div');
         activityItem.className = 'activity-item';
+        const isAdmin = globalData.userInfo && globalData.userInfo.type === 'admin';
         activityItem.innerHTML = `
             <h3>${activity.name}</h3>
             <div class="activity-date">${activity.date}</div>
             <div class="activity-info">📍 ${activity.location}</div>
             <div class="activity-info">${activity.description}</div>
+            ${isAdmin ? `
+            <div class="activity-actions">
+                <button class="action-btn edit-btn" onclick="showEditActivityModal(${activity.id})">编辑</button>
+                <button class="action-btn delete-btn" onclick="confirmDeleteActivity(${activity.id})">删除</button>
+            </div>
+            ` : ''}
         `;
         activityList.appendChild(activityItem);
     });
 }
 
-function showAddActivityModal() {
-    document.getElementById('add-activity-modal').style.display = 'flex';
-}
+let editingActivityId = null;
 
-function hideAddActivityModal() {
-    document.getElementById('add-activity-modal').style.display = 'none';
+function showAddActivityModal() {
+    editingActivityId = null;
+    document.getElementById('add-activity-modal').style.display = 'flex';
+    document.getElementById('modal-title').textContent = '添加活动';
     // 清空表单
     document.getElementById('activity-name').value = '';
     document.getElementById('activity-date').value = '';
     document.getElementById('activity-location').value = '';
     document.getElementById('activity-description').value = '';
+}
+
+function showEditActivityModal(id) {
+    editingActivityId = id;
+    const activity = globalData.activities.find(a => a.id === id);
+    if (activity) {
+        document.getElementById('modal-title').textContent = '编辑活动';
+        document.getElementById('activity-name').value = activity.name;
+        document.getElementById('activity-date').value = activity.date;
+        document.getElementById('activity-location').value = activity.location;
+        document.getElementById('activity-description').value = activity.description;
+        document.getElementById('add-activity-modal').style.display = 'flex';
+    }
+}
+
+function hideAddActivityModal() {
+    document.getElementById('add-activity-modal').style.display = 'none';
+}
+
+function confirmDeleteActivity(id) {
+    const activity = globalData.activities.find(a => a.id === id);
+    if (confirm(`确定要删除活动「${activity.name}」吗？`)) {
+        deleteActivity(id);
+    }
+}
+
+function deleteActivity(id) {
+    globalData.activities = globalData.activities.filter(a => a.id !== id);
+    saveData('activities');
+    alert('活动删除成功');
+    loadActivities();
 }
 
 function saveActivity() {
@@ -1087,17 +1125,34 @@ function saveActivity() {
         return;
     }
 
-    const newActivity = {
-        id: Date.now(),
-        name,
-        date,
-        location,
-        description
-    };
+    if (editingActivityId !== null) {
+        // 编辑现有活动
+        const index = globalData.activities.findIndex(a => a.id === editingActivityId);
+        if (index !== -1) {
+            globalData.activities[index] = {
+                id: editingActivityId,
+                name,
+                date,
+                location,
+                description
+            };
+            saveData('activities');
+            alert('活动修改成功');
+        }
+    } else {
+        // 添加新活动
+        const newActivity = {
+            id: Date.now(),
+            name,
+            date,
+            location,
+            description
+        };
 
-    globalData.activities.push(newActivity);
-    saveData('activities');
-    alert('活动添加成功');
+        globalData.activities.push(newActivity);
+        saveData('activities');
+        alert('活动添加成功');
+    }
     hideAddActivityModal();
     loadActivities();
 }

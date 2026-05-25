@@ -712,6 +712,33 @@ header {
     color: #1AAD19;
 }
 
+.activity-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.action-btn.edit-btn {
+    background-color: #1890ff;
+    color: white;
+}
+
+.action-btn.delete-btn {
+    background-color: #ff4d4f;
+    color: white;
+}
+
 /* 弹窗样式 */
 .modal {
     position: fixed;
